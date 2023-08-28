@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -15,9 +17,20 @@ import { UserService } from './user.service';
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
+
   @Get('me')
   getMe(@GetUser() user: User) {
     return user;
+  }
+
+  @Get()
+  getAllUsers() {
+    return this.userService.getAllUsers();
+  }
+
+  @Get(':id')
+  findUserById(@Param('id') id: number) {
+    return this.userService.findUserById(id);
   }
 
   @Patch()
@@ -26,5 +39,10 @@ export class UserController {
     @Body() dto: EditUserDto,
   ) {
     return this.userService.editUser(userId, dto);
+  }
+
+  @Delete(':id')
+  deleteUser(@Param('id') id: number) {
+    return this.userService.deleteUser(id);
   }
 }
