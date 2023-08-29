@@ -42,7 +42,7 @@ export class UserController {
     return this.userService.editUser(user.id, dto);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   deleteUser(@Param('id',ParseIntPipe) id: number) {
     return this.userService.deleteUser(id);
   }

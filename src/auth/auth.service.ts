@@ -5,7 +5,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as argon from 'argon2';
-import { PrismaClientKnownRequestError } from '@prisma/client/generator-build';
+
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
@@ -25,24 +25,19 @@ export class AuthService {
       const user = await this.prisma.user.create({
         data: {
           email: dto.email,
+          role: dto.role,
           hash,
         },
       });
 
       return this.signToken(user.id, user.email);
     } catch (error) {
-      if (
-        error instanceof
-        PrismaClientKnownRequestError
-      ) {
-        if (error.code === 'P2002') {
-          throw new ForbiddenException(
-            'Credentials taken',
-          );
-        }
+      if (error.code === 'P2002') {
+        throw new ForbiddenException('Credentials taken');
       }
       throw error;
     }
+  
   }
 
   async signin(dto: AuthDto) {

@@ -5,7 +5,6 @@ import {
   } from '@nestjs/common';
   import { ConfigService } from '@nestjs/config';
   import { PrismaService } from 'src/prisma/prisma.service';
-  import { PrismaClientKnownRequestError } from '@prisma/client/generator-build';
   import { ProductDto } from './dto';
   import { EditProductDto } from './dto';
   
@@ -17,7 +16,6 @@ import {
     ) {}
   
     async createProduct(dto: ProductDto) {
-      try {
         const product = await this.prisma.product.create({
           data: {
             name: dto.name,
@@ -28,14 +26,8 @@ import {
   
         return product;
   
-      } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
-          if (error.code === 'P2002') {
-            throw new ForbiddenException('Product name already exists');
-          }
-        }
-        throw error;
-      }
+      
+    
     }
   
     async getAllProducts() {

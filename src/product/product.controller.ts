@@ -10,8 +10,11 @@ import {
     ParseIntPipe,
   } from '@nestjs/common';
   import { EditProductDto, ProductDto } from './dto';
-  import { JwtGuard } from '../auth/guard';
+  import { JwtGuard, RolesGuard } from '../auth/guard';
   import { ProductService } from './product.service';
+  import { UserRole } from 'src/auth/guard/user-role.enum';
+  import { Roles } from 'src/auth/decorator/roles.decorator';
+
   
   @Controller('products') // Change the route to 'products'
   export class ProductController {
@@ -19,11 +22,15 @@ import {
   
     @Post() // Change the route to match 'products'
     @UseGuards(JwtGuard)
+   
     createProduct(@Body() dto: ProductDto) {
       return this.productService.createProduct(dto);
     }
   
-    @Get() // Change the route to match 'products'
+    @Get()
+    @Roles(UserRole.USER)
+    @UseGuards(JwtGuard,RolesGuard)
+    // Change the route to match 'products'
     getAllProducts() {
       return this.productService.getAllProducts();
     }
