@@ -7,8 +7,9 @@ import {
     Delete,
     UseGuards,
     Post,
+    ParseIntPipe,
   } from '@nestjs/common';
-  import { ProductDto } from './dto';
+  import { EditProductDto, ProductDto } from './dto';
   import { JwtGuard } from '../auth/guard';
   import { ProductService } from './product.service';
   
@@ -28,19 +29,19 @@ import {
     }
   
     @Get(':id') // Change the route to match 'products/:id'
-    findProductById(@Param('id') id: number) {
+    findProductById(@Param('id',ParseIntPipe) id: number) {
       return this.productService.findProductById(id);
     }
   
     @Patch(':id')
     @UseGuards(JwtGuard) // Change the route to match 'products/:id'
-    editProduct(@Param('id') id: number, @Body() dto: ProductDto) {
+    editProduct(@Param('id', ParseIntPipe) id: number, @Body() dto:EditProductDto) {
       return this.productService.editProduct(id, dto);
     }
   
     @Delete(':id')
     @UseGuards(JwtGuard) // Change the route to match 'products/:id'
-    deleteProduct(@Param('id') id: number) {
+    deleteProduct(@Param('id',ParseIntPipe) id: number) {
       return this.productService.deleteProduct(id);
     }
   }

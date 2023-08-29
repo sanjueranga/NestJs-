@@ -55,7 +55,7 @@ import {
     }
   
     async editProduct(id: number, dto: EditProductDto) {
-      try {
+     
         const product = await this.prisma.product.update({
           where: { id },
           data: {
@@ -66,15 +66,7 @@ import {
         });
   
         return product;
-      } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
-          if (error.code === 'P2002') {
-            throw new ForbiddenException('Product name already exists');
-          }
-        }
-        throw error;
       }
-    }
   
     async deleteProduct(id: number) {
       const product = await this.prisma.product.findUnique({

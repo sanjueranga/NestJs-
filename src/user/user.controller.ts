@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -29,20 +30,20 @@ export class UserController {
   }
 
   @Get(':id')
-  findUserById(@Param('id') id: number) {
+  findUserById(@Param('id',ParseIntPipe) id: number) {
     return this.userService.findUserById(id);
   }
 
   @Patch()
   editUser(
-    @GetUser('id') userId: number,
+    @GetUser('id') user:User,
     @Body() dto: EditUserDto,
   ) {
-    return this.userService.editUser(userId, dto);
+    return this.userService.editUser(user.id, dto);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: number) {
+  deleteUser(@Param('id',ParseIntPipe) id: number) {
     return this.userService.deleteUser(id);
   }
 }
